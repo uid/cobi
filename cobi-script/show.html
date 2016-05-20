@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"><!--<![endif]-->
+<!--
+Copyright (c) 2012-2016 Massachusetts Institute of Technology
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="http://localhost:8888/cobi-chi2015-data/css/bootstrap.min.css">
+        <style>
+            body {
+                padding-top: 100px;
+                padding-bottom: 40px;
+            }
+        </style>
+        <link rel="stylesheet" href="http://localhost:8888/cobi-chi2015-data/css/bootstrap-responsive.min.css">
+        <script src="js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>
+    </head>
+    <body screen_capture_injected="true">
+    <!-- <div id="testers">test</div> -->
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+        <![endif]-->
+
+        <!-- This code is taken from http://twitter.github.com/bootstrap/examples/hero.html -->
+<!--
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">Cobi Data</a>
+                    <div class="nav-collapse collapse">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+-->
+        <div class="container">
+            <!-- Example row of columns -->
+            <div class="row">
+                <div class="span12 main">
+                	<table id="submissions" class="table table-striped">
+                        <tbody><tr>
+                            <th>PaperId</th>
+                            <th>PaperTitle</th>
+                            <th>Abstract</th>
+                            <th>Authors</th>
+                            <!-- <th>SessionId</th> -->
+                            <th>SessionName</th>
+                            <th>Labels</th>
+                            <!-- <th>GroupId</th> -->
+                            <!-- <th>GroupTitle</th>                             -->
+                            <th>Top10</th>
+                            <th>Top20</th>
+                            <th>Top10rand</th>
+                            <th>Top20rand</th>
+                            <th>PapersInSession</th>
+                            <!-- <th>PapersInGroup</th> -->
+                            <th>TFIDF</th>
+                            <th>TFIDF Special</th>
+                            <th>MatchingLabels</th>
+                        </tr>
+                        </tbody></table>
+               </div>
+            </div>
+
+        </div> <!-- /container -->
+
+
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
+        <script src="js/vendor/jquery-ui-1.9.1.custom.min.js"></script>
+        <script src="js/vendor/bootstrap.min.js"></script>
+        <script src="js/vendor/underscore-min.js"></script>
+        <!--
+        <script src="authors-2013-0-19-3-15-28.json"></script>
+        <script src="submissions-2013-0-19-3-15-24.json"></script>
+        <script src="LC-affinities.json"></script>
+        <script src="PA-affinities.json"></script>
+		-->
+        <script>
+            var frenzyData = {};
+            var submissions = {};
+            var groups = {};
+            var orphans = [];
+
+            function randomizeArray(myArray){
+              var i = myArray.length, j, tempi, tempj;
+              if ( i == 0 ) return myArray;
+              while ( --i ) {
+                 j = Math.floor( Math.random() * ( i + 1 ) );
+                 tempi = myArray[i];
+                 tempj = myArray[j];
+                 myArray[i] = tempj;
+                 myArray[j] = tempi;
+               }
+               return myArray;
+            }
+
+            function loadTFIDFData(){
+                $.getJSON("tfidf.json", function(data) {
+                    $.each(data, function(index, row){
+                        // console.log(row.submission, row.result);
+                        // console.log(submissions[row.submission]);
+                        // console.log(row.specialResult);
+                        if (row.submission in submissions){
+                            submissions[row.submission].TFIDF += row.result;
+                            submissions[row.submission].TFIDFsp += row.specialResult;
+                        }
+                        if (row.submission == "pn382")
+                            console.log(submissions[row.submission]);
+                    });
+                }).complete(function(){
+                    console.log("TFIDF data loaded");
+                    display();
+                });
+            }
+
+            function loadEntityData(){
+                $.getJSON("entities.json", function(data) {
+                    $.each(data, function(index, row){
+                        // console.log(index, row);
+                        if (row.id == "pn382")
+                            console.log(row.id, row.title, row.abstract, row.authors);
+                        submissions[row.id] = {};
+                        submissions[row.id].TFIDF = "";
+                        submissions[row.id].TFIDFsp = "";
+                        submissions[row.id].Top10 = "";
+                        submissions[row.id].Top20 = "";
+                        submissions[row.id].Top10rand = "";
+                        submissions[row.id].Top20rand = "";
+                        // submissions[row.id].SessionId = "";
+                        submissions[row.id].SessionName = "";
+                        submissions[row.id].PapersInSession = "";
+                        // submissions[row.id].GroupId = "";
+                        // submissions[row.id].GroupTitle = "";
+                        // submissions[row.id].PapersInGroup = "";
+                        submissions[row.id].Id = row.id;
+                        submissions[row.id].Title = row.title;
+                        submissions[row.id].Abstract = row.abstract;
+                        submissions[row.id].Authors = row.authors;
+                        submissions[row.id].Labels = "";
+                        // console.log(submissions[row.id]);
+                    });
+                }).complete(function(){
+                    console.log("Entity data loaded");
+                    //loadFrenzyData();
+                    loadClusteringData();
+                });
+            }
+
+            function loadClusteringData(){
+                $.getJSON("CHI2015-clusters.json", function(data) {
+//                    console.log(data.length);
+                    frenzyData = data;
+                    $.each(data, function(index, row){
+                        console.log(row["label"], row["papers"]);
+                        $.each(row["papers"], function(i, id){
+                            console.log(id);
+                            submissions[id].SessionName = row["label"];
+                            submissions[id].PapersInSession = row["papers"];
+                        });
+                    });
+
+                }).complete(function(){
+                    console.log("clustering data loaded");
+                    loadTFIDFData();
+                });
+            }
+
+            function getFrenzyLabels(labels){
+                var result = {};
+                for (var label in labels){
+                    if (labels[label].checked == true){
+                        result[label] = labels[label];
+                    }
+                }
+                return result;
+            }
+
+            function loadFrenzyData(){
+                //$.getJSON("submissions-2013-0-19-3-15-24.json", function(data) {
+                $.getJSON("frenzy-20140114.js", function(data) {
+                    console.log(data[0]);
+                    frenzyData = data[0];
+                    $.each(data[0]["items"], function(index, row){
+                        // console.log(row.id, row.content.title);
+                        // submissions[row.id] = {};
+                        submissions[row.id].SessionName = row.session;
+                        submissions[row.id].PapersInSession = data[0]["sessions"][row.session]["members"];
+                        submissions[row.id].Labels = getFrenzyLabels(row.labels);
+                        // console.log(submissions[row.id]);
+                    });
+
+                }).complete(function(){
+                    console.log("clustering data loaded");
+                    loadTFIDFData();
+                });
+            }
+
+            // Check for various duplicate conditions
+            // Also, filter out the confidential papers (patent pending, etc.)
+            function isDuplicate(org, cur, output){
+                // 1. org and cur should not be same
+                // 2. cur should be a new item
+                // 3. cur should not be a confidential paper
+                if (org != cur && _.indexOf(output, cur) == -1)
+                    return false;
+                else
+                    return true;
+            }
+
+            // Get top choices from multiple sources.
+            function getTopChoices(e){
+                var count = 0;
+                var output = [];
+                // var paIndex = 0;
+                // var lcIndex = 0;
+                var tfidfIndex = 0;
+                var groupsIndex = 0;
+                //var sessionData = ;
+                // var paData = e.PA === ""? []: e.PA.split(",");
+                // var lcData = e.LC === ""? []: e.LC.split(",");
+                var tfidfData = e.TFIDF === "" ? [] : e.TFIDF.split(",");
+                // var groupsData = e.PapersInGroup === "" ? [] : e.PapersInGroup.split(",");
+
+                // sort labels of this paper by the number of papers per label (the lower the earlier)
+                var sortedLabels = [];
+                for (label in e.Labels){
+                    // console.log(label, frenzyData["labelList"][label]["itemsUsedBy"].length);
+                    if (typeof frenzyData["labelList"][label]["itemsUsedBy"] !== "undefined")
+                        sortedLabels.push([frenzyData["labelList"][label]["itemsUsedBy"].length, e.Labels[label], 0]);
+                }
+                // console.log(sortedLabels);
+                sortedLabels.sort(function(a, b) {return a[0] - b[0]});
+                // console.log(sortedLabels);
+
+                // Until about 5: from sessions created from the TP meeting
+                $.each(e.PapersInSession, function(i, s){
+                    if (!isDuplicate(e.Id, s, output)){
+                        output.push(s);
+                        count++;
+                        console.log(count, "Session", s);
+                    }
+                });
+
+
+                function getLabelItemsSortedByTFIDF(paper, label){
+                    var sortedLabels = [];
+                    var items = frenzyData["labelList"][label]["itemsUsedBy"];
+                    for (var i in items){
+                        var tfidfIndex = 10000;
+                        for (var index in tfidfData){
+                            if (tfidfData[index] == items[i])
+                                tfidfIndex = index;
+                        }
+                        // if (paper == "cscw100")
+                        //     console.log(paper, label, items[i], tfidfIndex);
+                        // if (tfidfIndex > -1)
+                        if (items[i] != paper)
+                            sortedLabels.push([tfidfIndex, items[i]]);
+                    }
+                    // console.log(sortedLabels);
+                    sortedLabels.sort(function(a, b) {return a[0] - b[0]});
+                    // console.log(sortedLabels);
+                    var result = [];
+                    for (var i in sortedLabels){
+                        result.push(sortedLabels[i][1]);
+                    }
+                    // console.log(result);
+                    return result;
+                }
+
+                // Until 20: round robin all labels for the paper and pick top tf-idf
+                while (count < 20){
+                    var s = null;
+                    var dirty = false;
+                    for (var i in sortedLabels){
+                        if (sortedLabels[i][0] <= sortedLabels[i][2]){
+                            // this label is fully explored. so do nothing.
+                        } else{
+                            var label = sortedLabels[i][1].label;
+                            var items = getLabelItemsSortedByTFIDF(e.Id, label);
+                            if (items.length <= sortedLabels[i][2]){
+                                continue;
+                            }
+                            s = items[sortedLabels[i][2]];
+                            // console.log(label, e.Id, s, s in submissions);
+                            // if Frenzy labels contain labels from rejected papers, ignore this paper.
+                            if (!(s in submissions))
+                                continue;
+                            // if (e.Id == "cscw100"){
+                            //     console.log(label, items, sortedLabels[i][2])
+                            // }
+                            dirty = true;
+                            sortedLabels[i][2]++;
+                            if (!isDuplicate(e.Id, s, output)){
+                                output.push(s);
+                                count++;
+                                console.log(count, "Label", label, s);
+                            }
+                        }
+                    }
+                    // nothing has been changed in this iteration, meaning the pool is depleted.
+                    if (dirty == false)
+                        break;
+                }
+
+                // Until 20: tfidf
+                while (count < 20){
+                    var s = null;
+                    if (tfidfData.length <= tfidfIndex) // ran out of data, so quit
+                        break;
+                    s = tfidfData[tfidfIndex];
+                    tfidfIndex++;
+                    if (!isDuplicate(e.Id, s, output)){
+                        output.push(s);
+                        count++;
+                        console.log(count, "TFIDF", s);
+                    }
+                }
+
+                // 10: add an orphan
+                // var attempt = 0;
+                // while (attempt<5){
+                //     // random member of the orphans array, repeat up to 5 times before giving up
+                //     var s = orphans[Math.floor(Math.random()*orphans.length)];
+                //     if (!isDuplicate(e.Id, s, output)){
+                //         output.push(s);
+                //         count++;
+                //         console.log(count, "Orphan", s);
+                //         break;
+                //     }
+                //     attempt++;
+                // }
+                return output;
+            }
+
+
+            function displayLabels(labels){
+                var arr = [];
+                for (var label in labels){
+                    arr.push(label);
+                }
+                return arr.join(", ");
+            }
+
+
+            // display all shared labels between two papers
+            function getSharedLabels(p1, p2){
+                var labels = [];
+                for (var label1 in p1.Labels){
+                    if (label1 in p2.Labels){
+                        labels.push(label1);
+                    }
+                }
+                // console.log(p1.Id, p2.Id, labels);
+                return labels;
+            }
+
+            function displaySharedLabels(submission){
+                var result = "";
+                for (var index in submission.Top10){
+                    var paper = submission.Top10[index];
+                    if (submission.Id === paper)
+                        continue;
+                    result += paper + ": " + getSharedLabels(submission, submissions[paper]) + " <br/>";
+                }
+                for (var index in submission.Top20){
+                    var paper = submission.Top20[index];
+                    if (submission.Id === paper)
+                        continue;
+                    result += paper + ": " + getSharedLabels(submission, submissions[paper]) + " <br/>";
+                }
+                return result;
+            }
+
+
+            function displayAuthors(authorList){
+                // console.log(authorList);
+                var authors = [];
+                var name = "";
+                var affiliation = "";
+                for (var index in authorList){
+                    name = authorList[index]["givenName"];
+                    // middle name initial, if available
+                    if ("middleInitial" in authorList[index] && authorList[index]["middleInitial"] != "")
+                        name += " " + authorList[index]["middleInitial"] + ".";
+                    name += " " + authorList[index]["familyName"];
+                    // authorList[index]["primary"]["dept"] + ", " +
+                    affiliation = authorList[index]["primary"]["institution"];
+                    authors.push(name + " (" + affiliation + ")");
+                }
+                return authors.join("; ");
+                // var authors = [];
+                // for (var index in authorList){
+                //     var name = authorList[index].split(",")[0];
+                //     authors.push(name);
+                // }
+                // return authors.join(", ");
+            }
+
+            function display(){
+                for (var id in submissions){
+                    console.log(id);
+                    var e = submissions[id];
+                    var tops = getTopChoices(e);
+                    e.Top10 = tops.slice(0,10);
+                    e.Top20 = tops.slice(10,20);
+                    e.Top10rand = randomizeArray(tops.slice(0,10));
+                    e.Top20rand = randomizeArray(tops.slice(10,20));
+
+                    var $entry = $("<tr/>")
+                        .append("<td>" + (typeof e.Id === "undefined"? " ": e.Id) + "</td>")
+                        .append("<td>" + (typeof e.Title === "undefined"? " ": e.Title) + "</td>")
+                        .append("<td>" + (typeof e.Abstract === "undefined"? " ": e.Abstract) + "</td>")
+                        .append("<td>" + (typeof e.Authors === "undefined"? " ": displayAuthors(e.Authors)) + "</td>")
+                        // .append("<td>" + (typeof e.SessionId === "undefined"? " ": e.SessionId) + "</td>")
+                        .append("<td>" + (typeof e.SessionName === "undefined"? " ": e.SessionName) + "</td>")
+                        .append("<td>" + (typeof e.Labels === "undefined"? " ": displayLabels(e.Labels)) + "</td>")
+                        // .append("<td>" + (typeof e.GroupId === "undefined"? " ": e.GroupId) + "</td>")
+                        // .append("<td>" + (typeof e.GroupTitle === "undefined"? " ": e.GroupTitle) + "</td>")
+                        .append("<td>" + (typeof e.Top10 === "undefined"? " ": e.Top10) + "</td>")
+                        .append("<td>" + (typeof e.Top20 === "undefined"? " ": e.Top20) + "</td>")
+                        .append("<td>" + (typeof e.Top10rand === "undefined"? " ": e.Top10rand) + "</td>")
+                        .append("<td>" + (typeof e.Top20rand === "undefined"? " ": e.Top20rand) + "</td>")
+                        .append("<td>" + (typeof e.PapersInSession === "undefined"? " ": e.PapersInSession) + "</td>")
+                        // .append("<td>" + (typeof e.PapersInGroup === "undefined"? " ": e.PapersInGroup) + "</td>")
+                        .append("<td>" + (typeof e.TFIDF === "undefined"? " ": e.TFIDF) + "</td>")
+                        .append("<td>" + (typeof e.TFIDFsp === "undefined"? " ": e.TFIDFsp) + "</td>")
+                        .append("<td>" + displaySharedLabels(e) + "</td>")
+                        ;
+                    $("#submissions").append($entry);
+                };
+            }
+
+       	$(document).ready(function() {
+            loadEntityData();
+
+       	});
+        </script>
+</body>
+</html>

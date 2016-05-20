@@ -1,0 +1,375 @@
+/*
+Copyright (c) 2012-2016 Massachusetts Institute of Technology
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+
+
+/* ==========================================================================
+   Generic styles
+   ========================================================================== */
+body {
+    font-size: 12px;
+}
+
+
+.left-sidebar, .main {
+    margin-left: 10px;
+}
+
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   speak for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     3000px; /* 100%; */
+    width:      3000px; /* 100%; */
+    background: rgba( 255, 255, 255, .8 ) 
+                url('../img/spinner.gif') 
+                30% 15%
+                no-repeat;
+                /* 50% 50% */
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+
+.main {
+    /* so that the main div doesn't overlap with left sidebar */
+    overflow-x: scroll;
+}
+/* ==========================================================================
+   Left Sidebar with options
+   ========================================================================== */
+
+.left-sidebar {
+    /*position: fixed;*/
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.left-sidebar h4 {
+    margin-top: 15px;
+}
+
+.left-sidebar h4 a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.left-sidebar li {
+    line-height: 18px;               
+}
+
+.view-option-active {
+    font-weight: bold;
+    background-color: #dddddd;
+}
+
+.sidebar-fixed {
+    position: fixed;
+    width: 150px;
+    height: 85%;
+    overflow-y: scroll;    
+}
+
+/*@media (max-width: 767px) {*/
+@media (max-width: 950px) {    
+    .sidebar-fixed {
+        position:static;
+        width:auto;
+    }
+}
+
+.sidebar-fixed ul {
+    margin: 0 0 10px 10px;
+    /*display: none;*/
+}
+
+.sidebar-fixed ul li * {
+    position: relative;
+    /*left: -5px;*/
+}
+
+.sidebar-fixed .toggle {
+    font-size: 0.6em;
+    line-height: 24px;
+}
+/* ==========================================================================
+    Main program
+========================================================================== */
+
+#program {
+    border-color: #bbbbbb;
+}
+
+#program .cell {
+    font-size: 10px;
+    padding: 3px;
+    line-height: 12px;
+    border-color: #bbbbbb;
+}
+
+#program .slot, div#unscheduled .slot {
+    font-size: 10px;
+    line-height: 12px;
+}
+
+#program .slot:not(.unavailable), div#unscheduled .slot:not(.unavailable) {
+    cursor: pointer;
+}
+
+#program .slot:hover, div#unscheduled .slot:hover {
+    outline: 1px solid #333333;
+}
+
+#program .cell .title, div#unscheduled .cell .title {
+    width: 48px;
+    height: 38px;                
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#program .cell .display, div#unscheduled .cell .display {
+    width: 48px;
+    height: 30px;
+    border-top: solid 1px #dddddd;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    /*color: #aaaaaa;*/
+}
+
+#program .cell .display .icon, div#unscheduled .cell .display .icon {
+    width: 24px;
+}
+
+#program .header-row, #program .header-col {
+    /*position: fixed;*/
+    font-weight: bold;
+}
+
+#program .selected, div#unscheduled .selected {
+    background: yellow;
+    /*#ffb7b7;*/
+}
+
+#program .move-src-selected, div#unscheduled .move-src-selected {
+    background: yellow;
+}
+
+#program .unavailable {
+    background: #eeeeee;
+}
+
+#program .empty {
+    text-align: center;
+    vertical-align: middle;
+    /*opacity: 0.5;*/
+}
+/*
+#program .empty:hover {
+    opacity: 1;
+}
+*/
+#program .recommended, div#unscheduled .recommended {
+    background: #fd8d3c;
+}
+
+#program .proposed-swap, div#unscheduled .proposed-swap {
+    cursor: pointer;
+}
+
+#program .highlight, div#unscheduled .highlight {
+	/*outline: 2px solid black;*/
+    background: #aec7e8 !important;
+}
+
+
+/* ==========================================================================
+   Unscheduled workspace
+   ========================================================================== */
+
+div#unscheduled {
+    border: solid 1px #dddddd;
+    height: 71px;
+    margin-bottom: 15px;
+}
+
+div#unscheduled .slot {
+    border: solid 1px #dddddd;
+}
+
+
+/* ==========================================================================
+    Search Box
+   ========================================================================== */
+/*
+.dropdown-item ul {
+    list-style-type: circle;
+}
+*/
+.dropdown-item li {
+    line-height: 14px;    
+}
+
+/* ==========================================================================
+    Status Bar
+   ========================================================================== */
+
+#statusbar {
+    font-size: 14px;
+}
+
+#swap-review-cancel-link {
+    margin-top: 0px;
+}
+
+
+/* ==========================================================================
+    Interface misc
+   ========================================================================== */
+
+/* apply alternating gray in the paper listing inside a popover */
+.list-submissions li {
+    padding: 5px;
+}
+
+.list-submissions li:nth-child(even) {
+    background: #dddddd;
+}
+
+/* color-coded rectangle in the legend */
+.palette {
+    padding-left: 10px;
+    margin-left: 3px;
+    margin-right: 2px;
+    cursor: pointer;
+}
+
+.swap-total {
+    float: left;
+    width: 17px;
+    height: 23px;
+    padding-left: 3px;
+    padding-top: 7px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.swap-total-full {
+    font-size: 14px;
+}
+
+.stronger-text {
+    color: black;
+}
+
+.weaker-text {
+    color: #888888;
+}
+
+.conflict-type-preview {
+    float: left;
+    width: 25px;
+    margin-left: 3px;
+    margin-top: 3px;
+}
+
+/* color-coded rectangle in the legend */
+.conflict-display {
+    padding-left: 4px;
+    margin-left: 1px;
+    margin-right: 1px;
+    cursor: pointer;
+}
+
+.conflict-preview-display {
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-left: 2px;
+    margin-right: 2px;  
+    color: white;
+}
+
+.conflict-netcount-added, .conflict-netcount-removed {
+    color: #888888;
+}
+/*
+.conflict-netcount-removed {
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+}
+*/
+.conflict-preview-added {
+    color: #888888;
+    font-size: 6px;
+    margin-left: 1px;
+    margin-right: 3px;
+    padding-left: 6px;
+    /*cursor: pointer;*/
+}
+
+.conflict-preview-removed {
+    color: #888888;
+    font-size: 6px;
+    margin-left: 1px;
+    margin-right: 3px;
+    padding-left: 6px;
+    /*cursor: pointer;*/
+}
+
+.locked {
+    background: url('../img/lock.png') 
+                97% 3%
+                no-repeat;
+    background-size: 8px 11px;
+}
+
+.popover {
+    width: 400px;
+}
+
+.popover-inner {
+    width: 400px;
+    font-size: 11px;
+}
+
+.popover-inner li {
+    line-height: 12px;
+}
+
+
+
