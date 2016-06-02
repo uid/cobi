@@ -1,0 +1,826 @@
+/*
+Copyright (c) 2012-2016 Massachusetts Institute of Technology
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+
+
+/* ==========================================================================
+   Generic styles
+   ========================================================================== */
+body {
+    font-size: 12px;
+}
+
+.navbar .brand {
+    font-size: 32px;
+    color: white;
+    position: fixed;
+}
+
+
+
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   speak for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     3000px; /* 100%; */
+    width:      3000px; /* 100%; */
+    background: rgba( 255, 255, 255, .8 ) 
+                url('../img/spinner.gif') 
+                30% 15%
+                no-repeat;
+                /* 50% 50% */
+}
+
+/*.spinner {
+    z-index: 1000;
+    background: rgba( 100, 100, 100, .8) 
+                url('../img/spinner.gif') 
+                45% 45% 
+                no-repeat;
+}*/
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+
+
+/* ==========================================================================
+   Main display
+   ========================================================================== */
+
+.main {
+    /*position: fixed;*/
+    /*margin-left: 17% !important;
+    max-width: 83%;
+    max-height: 85%;
+    overflow-y: scroll;
+    padding-right: 50px;*/
+    -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;
+}
+
+.popover-inner {
+   /* -webkit-user-select: none;  
+    -moz-user-select: none;    
+    -ms-user-select: none;      
+    user-select: none;  */
+}
+
+.main-fixed {
+    /*position: fixed;*/
+    /*margin-left: 17% !important;*/
+    /*max-width: 83%;*/
+    max-height: 85%;
+    /*overflow-y: scroll;*/
+    padding-right: 30px;
+    /*width: 80%;*/
+}
+
+/* ==========================================================================
+   Left Sidebar with options
+   ========================================================================== */
+
+.left-sidebar {
+    /*overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    height: 85%;*/
+    margin-left: 10px;
+}
+
+.left-sidebar h4 {
+    margin-top: 15px;
+}
+
+.left-sidebar h4 a {
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.left-sidebar li {
+    line-height: 18px;               
+}
+
+.view-option-active {
+    font-weight: bold;
+    background-color: #dddddd;
+}
+
+.sidebar-fixed {
+    position: fixed;
+    max-width: 15%;
+    max-height: 85%;
+    overflow-y: auto;
+}
+
+/*@media (max-width: 950px) {*/
+@media (max-width: 767px) {    
+    .sidebar-fixed {
+        position:static;
+        width:auto;
+        max-width: 100%;
+    }
+}
+
+.sidebar-fixed ul {
+    margin: 0 0 10px 10px;
+    /*display: none;*/
+}
+
+.sidebar-fixed ul li * {
+    position: relative;
+    /*left: -5px;*/
+}
+
+.sidebar-fixed .toggle {
+    font-size: 0.6em;
+    line-height: 24px;
+}
+
+.sidebar-fixed .myCheckbox {
+    margin-top: -3px;
+}
+
+/* ==========================================================================
+   Searchbox
+   ========================================================================== */
+
+/* class assigned by select2 plugin from Searchbox.js */
+.navbar .searchbox {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+/* class assigned by select2 plugin from Searchbox.js */
+.dropdown-item {
+    /*position: fixed;
+    display: block;
+    top: 38px !important;
+    left: 266px !important;
+    width: 703px !important;*/
+}
+
+.dropdown-item li {
+    line-height: 14px;    
+}
+
+
+/* ==========================================================================
+   User Display
+   ========================================================================== */
+
+.navbar .user-display {
+    margin-left: 20px;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.navbar .user-display .icon-user {
+    margin-right: 10px;
+}
+
+/* ==========================================================================
+   Top Statusbar 
+   ========================================================================== */
+#statusbar .move-cancel-button {
+    margin-top: -5px;
+}
+
+#statusbar {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+/* ==========================================================================
+    View Mode Handling
+========================================================================== */
+.move-mode .slot:not(.proposed-swap), .move-mode .slot-paper:not(.proposed-swap), .move-mode .slot-chair:not(.proposed-swap) {
+    background-color: #d8d8d8;
+    cursor: default !important;
+}
+
+
+/* ==========================================================================
+    Main Program Table
+========================================================================== */
+
+.program-wrapper {
+    width: 100%;
+}
+
+#program {
+    border-color: #bbbbbb;
+    margin-top: 10px;
+    table-layout: fixed;
+}
+
+/* days separated with different cell color */
+#program tr .header-day-border{
+    background-color: #bbbbbb;
+    border: 0;
+    padding: 2px;
+    /*border-top: solid 3px #bbbbbb;*/
+
+}
+
+.main .cell {
+    font-size: 10px;
+    padding: 3px;
+    line-height: 12px;
+    border-color: #bbbbbb;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.main .cell .user {
+    position: absolute;
+    margin-top: -16px;
+    margin-left: -3px;
+    padding: 1px;
+    background: #703030;
+    color: white;
+    z-index: 100;
+    display: none;
+}
+
+#program .header-cell {
+    vertical-align: middle;
+    text-align: center;
+}
+
+#program .slot, #unscheduled .slot, #unscheduled-papers .slot-paper, #unscheduled-chairs .slot-chair {
+    min-width: 48px;
+    font-size: 10px;
+    line-height: 12px;
+}
+
+
+#program .slot:not(.unavailable), #unscheduled .slot:not(.unavailable), #unscheduled-papers .slot-paper:not(.unavailable), #unscheduled-chairs .slot-chair:not(.unavailable) {
+    cursor: pointer;
+}
+
+
+#program .slot:hover, #unscheduled .slot:hover, #unscheduled-papers .slot-paper:hover, #unscheduled-chairs .slot-chair:hover {
+    outline: 1px solid #333333;
+}
+
+.main .cell .title {
+    /*width: 44px;*/
+    height: 38px;                
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+#unscheduled .cell .title, #unscheduled-papers .cell .title, #unscheduled-chairs .cell .title {
+    width: 48px;
+}
+
+#program .cell .title .icon-plus{
+    margin-top: 10px;
+}
+
+.main .cell .display {
+    /*width: 44px;*/
+    height: 40px;
+    border-top: solid 1px #cccccc;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    /*color: #aaaaaa;*/
+}
+
+.main .cell .conflicts {
+    display: none;
+    height: 30px;
+    border-top: solid 1px #cccccc;
+    overflow-x: hidden;
+    overflow-y: hidden;    
+}
+
+/* for line alignment when the submission is empty so no paper info is displayed */
+.submission-empty .conflicts {
+    margin-top: 20px;
+}
+
+#unscheduled .cell .display, #unscheduled-papers .cell .display, #unscheduled-chairs .cell .display, #unscheduled .cell .conflicts, #unscheduled-papers .cell .conflicts, #unscheduled-chairs .cell .conflicts {
+    width: 48px;
+}
+
+.main .cell .display .icon {
+    width: 24px;
+}
+
+.chair-text {
+    font-size:12px;
+    font-weight: bold;
+}
+
+.chair-not-available {
+    color: red;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.main .cell .display .duration {
+    font-size: 14px;
+    padding: 10px;
+}
+
+.main .cell .display .duration-overtime {
+    color: red;
+    font-weight: bold;
+}
+
+.main .cell .display .duration-undertime {
+    color: #FF8A00;
+    font-weight: bold;
+}
+
+.main .cell .display .duration-full {
+    color: #bbbbbb;
+}
+
+.main .cell .display .duration-none {
+    color: #bbbbbb;
+}
+
+.main .cell .conflicts .icon {
+    width: 24px;
+}
+
+.popover-inner .icon {
+    width: 24px;
+    margin-top: -13px;
+}
+
+#program .header-row, #program .header-col {
+    /*position: fixed;*/
+    font-weight: bold;
+}
+
+#program .header-row {
+    height: 24px;
+}
+
+#program .header-col {
+    border-right: solid 3px #bbbbbb;
+}
+
+/* to keep high specificity, do not just use .recommended */
+#program .selected, #unscheduled .selected, #unscheduled-papers .selected, #unscheduled-chairs .selected {
+    background: yellow; /*!important;*/
+    z-index: 1000;
+    /*#ffb7b7;*/
+}
+
+/* to keep high specificity, do not just use .recommended */
+#program .move-src-selected, #unscheduled .move-src-selected, #unscheduled-papers .move-src-selected, #unscheduled-chairs .move-src-selected { 
+    background: yellow; /*!important;*/
+    z-index: 1000;
+}
+
+#program .unavailable {
+    background: #d8d8d8;
+}
+
+#program .empty {
+    text-align: center;
+    vertical-align: middle;
+    /*opacity: 0.5;*/
+}
+/*
+#program .empty:hover {
+    opacity: 1;
+}
+*/
+
+/* to keep high specificity, do not just use .recommended */
+#program .recommended, #unscheduled .recommended, #unscheduled-papers .recommended, #unscheduled-chairs .recommended, #statusbar .recommended, .popover-inner .list-submissions li.recommended {
+    background: #23E000; /*!important;*/ /* #03BF57  #fd8d3c;*/
+    z-index: 1000;
+}
+
+/* inside conflict details popover */
+.title-msg, .persona-msg, .author-msg{
+    font-weight: bold;
+}
+
+#program .proposed-swap, #unscheduled .proposed-swap, #unscheduled-papers .proposed-swap, #unscheduled-chairs .proposed-swap {
+    cursor: pointer;
+}
+
+#program .highlight, #unscheduled .highlight, #unscheduled-papers .highlight, #unscheduled-chairs .highlight {
+	/*outline: 2px solid black;*/
+    background: #aec7e8 !important;
+}
+
+
+/* ==========================================================================
+   Unscheduled workspace
+   ========================================================================== */
+
+.unscheduled-panel .left, .unscheduled-panel .right, .unscheduled-papers-panel .left, .unscheduled-papers-panel .right, .unscheduled-chairs-panel .left, .unscheduled-chairs-panel .right {
+    height: 95px;
+    cursor: default;
+    opacity: 0.3;
+    float: left;
+}
+
+.unscheduled-panel .left, .unscheduled-papers-panel .left, .unscheduled-chairs-panel .left { 
+    width: 0; 
+    height: 0; 
+    border-top: 47px solid transparent;
+    border-bottom: 47px solid transparent;
+    border-right: 20px solid #bbbbbb;    
+}
+
+.unscheduled-panel .right, .unscheduled-papers-panel .right, .unscheduled-chairs-panel .right {
+    width: 0; 
+    height: 0; 
+    border-top: 47px solid transparent;
+    border-bottom: 47px solid transparent;
+    border-left: 20px solid #bbbbbb;
+}
+
+.unscheduled-wrapper, .unscheduled-papers-wrapper, .unscheduled-chairs-wrapper {
+    float: left;
+    /*width: 95%;*/
+    width: 80%;
+    height: 95px;
+    border: solid 1px #dddddd;
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 0 10px 15px 10px;
+}
+
+#unscheduled, #unscheduled-papers, #unscheduled-chairs {
+    /* table-layout: fixed; */
+    border-collapse: separate;
+    border-spacing: 10px 5px;
+    /*padding-bottom:20px;*/
+}
+
+#unscheduled .slot, #unscheduled-papers .slot-paper, #unscheduled-chairs .slot-chair {    
+    border: solid 1px #dddddd;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+
+
+/* ==========================================================================
+    Status Bar
+   ========================================================================== */
+
+#statusbar {
+    font-size: 14px;
+}
+
+#swap-review-cancel-link {
+    margin-top: 0px;
+}
+
+
+/* ==========================================================================
+    Chair display inside popover
+   ========================================================================== */
+.chair-display {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-bottom:thick solid #888888;
+    /*padding-left: 5px;
+    padding-right: 7px;*/
+}
+
+.chair-display button {
+    margin-top: -5px;
+    float: right;
+}
+
+.chair-display:hover { 
+    outline: 1px solid #333333;
+}
+
+/* ==========================================================================
+    List of submissions inside popover
+   ========================================================================== */
+
+.list-submissions {
+    list-style-type: none;
+    margin: 0;
+}
+
+.list-submissions li { 
+    margin-top: 5px;
+    padding: 10px;
+}
+
+
+.list-submissions li:hover { 
+    outline: 1px solid #333333;
+}
+
+.list-submissions li button{
+    float:right;
+    margin-top: -10px;
+}
+
+.list-submissions li:nth-child(even) {
+    background: #e0e0e0;
+}
+
+.list-submissions li:nth-child(odd) {
+    background: #f2f2f2;
+}
+
+.list-submissions .submission-type { 
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom:3px;
+    margin-right:5px;
+}
+
+.list-submissions .submission-empty {
+    padding: 20px 10px 30px 10px;
+}
+
+.list-submissions .submission-title {
+    font-weight: bold;
+}
+
+/* ==========================================================================
+    Conflicts Display
+   ========================================================================== */
+.swap-total {
+    float: left;
+    width: 17px;
+    height: 23px;
+    padding-left: 3px;
+    padding-top: 5px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+/* session info */
+.swap-total-full {
+    font-size: 14px;
+    margin: 5px;
+}
+
+/* mouse hover links not activated */
+.hover-description a{
+    text-decoration: none;
+    color: black;
+}
+
+/* submission info */
+.list-submissions .swap-total-full, .chair .swap-total-full {
+    font-size: 12px;
+    margin: 5px 5px 5px 0;
+}
+
+.stronger-text {
+    color: black;
+}
+
+.weaker-text {
+    color: #888888;
+}
+
+.conflict-type-preview {
+    float: left;
+    width: 25px;
+    margin-left: 3px;
+    /*margin-top: 3px;*/
+}
+
+.conflict-preview-line{
+    float: left;
+    width: 100%;
+    height: 0px;
+    border: 1px solid #dddddd;    
+}
+
+.pref-type-preview{
+    margin-left:22px;
+}
+
+/* color-coded rectangle in the legend */
+.conflict-display {
+    padding-left: 4px;
+    margin-left: 1px;
+    margin-right: 1px;
+    cursor: pointer;
+    outline: 1px solid #bbbbbb;
+}
+
+.conflict-preview-display-div-wrapper {
+    line-height: 20px;
+}
+
+.conflict-preview-display-wrapper {
+/*    display: inline-block;
+    float: left;*/
+    overflow-wrap: break-word;
+}
+
+.conflict-preview-display {
+    /*padding-left: 5px;
+    padding-right: 5px;*/
+    padding: 3px 6px 3px 6px;
+    margin-left: 5px;
+    margin-right: 5px;  
+    color: white;
+    cursor: pointer;
+/*    display: inline-block;*/
+}
+
+.conflict-selected {
+    outline: 3px solid #bbbbbb;
+}
+
+.conflict-preview-detail {
+    padding: 10px;
+    line-height: 12px;
+    background: #F2D9BB;
+    color: #000000;
+}
+
+.conflict-netcount-added, .conflict-netcount-removed {
+    color: #000000; /*#888888;*/
+}
+/*
+.conflict-netcount-removed {
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+}
+*/
+.conflict-preview-added {
+    color: #888888;
+    font-size: 6px;
+    margin-left: 1px;
+    margin-right: 3px;
+    padding-left: 6px;
+    /*cursor: pointer;*/
+}
+
+.conflict-preview-removed {
+    color: #888888;
+    font-size: 6px;
+    margin-left: 1px;
+    margin-right: 3px;
+    padding-left: 6px;
+    /*cursor: pointer;*/
+}
+
+
+/* conflict in the sidebar */
+#list-constraints li.constraint-entry {
+
+}
+
+#list-constraints {
+    margin-top: -10px;
+}
+
+#list-constraints h5 {
+    margin-bottom: -10px;
+}
+
+#list-constraints .sublist-constraints {
+    margin-top: -10px;
+}
+
+#list-constraints .sublist-header {
+
+}
+
+/* ==========================================================================
+    Interface misc
+   ========================================================================== */
+.locked {
+    background: url('../img/lock.png') 
+                97% 3%
+                no-repeat;
+    z-index: 100;
+    background-size: 8px 11px;
+}
+
+/* color-coded rectangle in the legend */
+.palette {
+    padding-left: 10px;
+    margin-left: 3px;
+    margin-right: 2px;
+    cursor: pointer;
+}
+.popover {
+    width: 450px;
+}
+
+.popover-inner {
+    width: 450px;
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.popover-inner .save-button {
+    margin-top: 3px;
+    margin-right: 5px;
+}
+
+.popover-inner li {
+    line-height: 14px;  
+}
+
+.popover-inner button {
+    margin-right: 7px;
+}
+
+/* ==========================================================================
+    Color palette
+   ========================================================================== */
+[class*="cell-conflict-high"]{
+    background-color: #913A52;    
+}
+
+[class*="cell-conflict-medium"]{
+    background-color: #C77F77;    
+}
+
+[class*="cell-conflict-low"]{
+    background-color: #C77F77;    
+}
+
+[class*="cell-conflict-good"]{
+    background-color: #3a87ad;
+}
+
+.cell-preference{
+    background-color: #3a87ad;  /*#36B84F;    */
+}
+
+[class*="cell-preference-good"]{
+    background-color: #3a87ad;
+}
+
+.cell-persona{
+    background-color: #F2D9BB;
+}
+
+.cell-community{
+    background-color: #A69E86;
+}
+
+.cell-session-type{
+    background-color: #ffcf73;
+}
+.cell-type-paper { background-color: #eee;} 
+.cell-type-casestudy { background-color: #aae3ff;} 
+.cell-type-panel { background-color: #ffb5e1;} 
+.cell-type-course { background-color: #faff7e;} 
+.cell-type-SIG { background-color: #83ff87;} 
+.cell-type-altchi { background-color: #aaa;} 
+.cell-type-special { background-color: #ffcf73;} 
+.cell-type-bof { background-color: #d1ffd2;}
+.cell-type-unavailable { background-color: #333;} 
+
+
+

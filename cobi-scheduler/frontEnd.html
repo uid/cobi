@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+<!--
+Copyright (c) 2012-2016 Massachusetts Institute of Technology
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>
+    <script src="scheduleDataJsonCompact.js"></script>
+    <script src="first-personas.js"></script> 
+     <!--    <script src="personas.js"></script> -->
+    <script src="cobi.js"></script> 
+    <script src="backend.js"></script>
+
+    <style>
+      td {
+      width: 150px;
+      }
+    </style>
+	
+     <script language="javascript" type="text/javascript">     
+
+     $(document).ready(function() {
+	     initialize()
+//	     alert(JSON.stringify(keys(allRooms)));
+	     // alert(JSON.stringify(allSessions["209"].title));
+	     //	     alert(randomizeSchedule());
+	     //	     alert(JSON.stringify(allSessions["209"]));
+
+	     // test: check that violated constraints are per time and per session associated
+             //alert(JSON.stringify(conflictsByTime["May 8, 2012"]["11:30"]));
+	     //alert(JSON.stringify(conflictsBySession["153"]));
+     		     
+	     // test: swapping leveraging the crowd with madness
+	     // swapSchedule(schedule["May 7, 2012"]["11:30"]["Ballroom F"]["117"],
+	     //				  schedule["May 10, 2012"]["08:30"]["Ballroom D"]["223"]);
+	     //		     alert(JSON.stringify(schedule["May 7, 2012"]["11:30"]["Ballroom F"]));
+	     //		     alert(JSON.stringify(schedule["May 10, 2012"]["08:30"]["Ballroom D"]));
+	     
+	     
+	     // 	     allRooms = getAllRooms();
+// 	     allSessions = getAllSessions();
+// 	     attachPersonas();  // loads personas from a file into schedule JSON
+// 	     initializeAuthorConflictsAmongSessions(); // this can be loaded from a file
+// 	     initializePersonaConflictsAmongSessions(); // this can be loaded from a file
+// 	     conflictsByTime = getAllConflicts();
+
+
+
+	     // test: checking that personas got attached to sessions and print out full persona names
+	     //for(var s in schedule["May 7, 2012"]["11:30"]["Ballroom F"]){
+	     //	 alert(JSON.stringify(keys(allSessions[s]["personas"]).map(function(x) {return personaHash[x]})));
+	     //     }
+
+	     // test: find all sesions with conflicts
+	     // 	     for(var s1 in allSessions){
+	     // 		 for(var s2 in allSessions){
+	     // 		     if(authorConflictsAmongSessions[s1][s2].length > 0){
+	     // 			 alert(JSON.stringify(authorConflictsAmongSessions[s1][s2]));
+	     // 			 return;
+	     // 		     }
+	     // 		 }
+	     // 	     }
+	     // test: checking author conflict finding
+	     //	alert(JSON.stringify(computeAuthorConflicts(allSessions["117"], allSessions["47"])));
+	     //	     	alert(JSON.stringify(computePersonaConflicts(allSessions["117"], allSessions["47"])));
+	     
+	     
+
+	     // test: how many conflicts are caused by a session
+	     //alert(calculateNumConflictsCausedBy(allSessions["39"]));
+	     
+     // test: Proposing a swap
+     //	     alert(JSON.stringify(proposeSwap(allSessions["39"])));
+     	//     alert(JSON.stringify(proposeSwapValues(allSessions["39"])));
+	     //	     var swapValues = proposeSwap(allSessions["39"]);
+	     //	     var sortedSwaps = keys(swapValues).sort(function(a, b) {return swapValues[b].value- swapValues[a].value;});
+	     // 	     // return top 10 swaps
+	     //      	     var output = "Finding good swaps for session 39 (" + allSessions["39"].title + ")\n";
+	     //	     for(var i = 0; i < 10; i++){
+	     //		 output += sortedSwaps[i] + " (" + allSessions[sortedSwaps[i]].title + "): " + swapValues[sortedSwaps[i]].value + "\n";
+	     // }
+	     //	      	     alert(output);
+	     
+	     
+	     var sm = makeProgram();
+	     displayProgram(sm);
+	 });
+
+</script>
+    </head>
+<body>
+<button onclick="createDatabase()">Create database entries</button>
+
+<div id="program"></div>
+</body>
+</html>

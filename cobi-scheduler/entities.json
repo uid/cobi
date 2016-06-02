@@ -1,0 +1,84 @@
+var entities = {"All sessions" : {
+    "type": [		
+	     "paper",	
+	     "courses",	
+	     "SIG",	
+	     "invited talk"
+	    ],
+    "personas": [
+		 "UIST",
+		 "Web",
+		 "Usability",
+		 "Design"
+		 ],
+     "communities": 
+	["Design",
+	 "Health",
+	 "Accessibility"],
+     "title": 
+	["Course: HCI funding",
+	 "SIG:    Digital Art",
+	 "Leveraging the Crowd"]
+	},    
+ "All submissions" : {
+     "type": [
+	      "paper",
+	      "courses",
+	      "SIG",
+	      "invited talk"],
+	 "best paper" : [
+			 "True",
+			 "False"],
+	 "title" : [
+		    "Changing requirements to HCI funding: A global perspective",    
+		    "Digital Art: Evaluation, Appreciation, Critique (Invited SIG)",
+		    "Human Computation Tasks with Global Constraints",
+		    "Direct Answers for Search Queries in the Long Tail",
+		    "Strategies for Crowdsourcing Social Data Analysis"]
+	 },
+ "All people": {
+  "names": ["Juho Kim", "Haoqi Zhang", "Rob Miller", "Michael Bernstein", "Edith Law", "Chuck Bartowski"],
+  		"mod": ["is", "is not"]	  
+	}
+ 
+}
+
+var constraintObjects = {
+      "room" : {
+	 "room" : [	     
+		     "A",
+		     "B",
+		     "C",
+		     "D",
+		     "E",
+		     "F",
+		     "11AB",
+		     "12AB",
+		     "13"
+			     ],
+        "size" : [ "large", "medium", "small"],
+        "mod" :[ "in", "not in", "near", "far"]
+       },
+       "time" : {
+	     "time":
+		 [
+		  "11:30 AM",
+		  "1:00 PM",
+		  "2:30 PM"
+		  ],
+		  "mod": ["at", "before", "after", "same", "different"]
+		  },
+      "date" :{
+		 "date": [
+		 "Monday May 5th",
+		 "Tuesday May 6th",
+		 "Wednesday May 7th"
+			  ],
+		"mod": ["on", "before", "after", "same", "different"]	  
+ 		}
+}
+
+var constraintComparator = ["should be in session with", 
+                            "should not be in session with",
+			    "should not be opposite"];
+	

@@ -1,0 +1,140 @@
+/*
+Copyright (c) 2012-2016 Massachusetts Institute of Technology
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+
+/* ==========================================================================
+   Generic styles
+   ========================================================================== */
+body {
+    font-size: 14px;
+}
+
+.navbar .brand {
+    font-size: 32px;
+    color: white;
+    position: fixed;
+}
+
+
+
+/* Start by setting display:none to make this hidden.
+   Then we position it in relation to the viewport window
+   with position:fixed. Width, height, top and left speak
+   speak for themselves. Background we set to 80% white with
+   our animation centered, and no-repeating */
+.modal {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     3000px; /* 100%; */
+    width:      3000px; /* 100%; */
+    background: rgba( 255, 255, 255, .8 ) 
+                url('../img/spinner.gif') 
+                30% 15%
+                no-repeat;
+                /* 50% 50% */
+}
+
+/* When the body has the loading class, we turn
+   the scrollbar off with overflow:hidden */
+body.loading {
+    overflow: hidden;   
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .modal {
+    display: block;
+}
+
+
+
+/* ==========================================================================
+   User Display
+   ========================================================================== */
+
+.navbar .user-display {
+    margin-left: 20px;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.navbar .user-display .icon-user {
+    margin-right: 10px;
+}
+
+.preview {
+  background: #eeeeee;
+  margin: 15px;
+}
+
+/* ==========================================================================
+   Expression Display
+   ========================================================================== */
+.expression {
+  padding: 10px;
+}
+
+
+.expression .save-button {
+  margin-right: 50px;
+}
+
+/* ==========================================================================
+   Entity Display
+   ========================================================================== */
+
+.entity-begin {
+
+}
+
+.type {
+}
+
+.plus-button {
+  margin-left: 20px;
+}
+
+.cond {
+  position: relative;
+  padding: 10px;
+  margin: -10px 10px 10px 10px;
+  background-color: #dddddd;
+}
+
+.entity-begin .cond {
+  margin: 10px;
+}
+
+.cond .close-button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.cond .cond-value {
+  margin-top: 10px;
+}
+
+
